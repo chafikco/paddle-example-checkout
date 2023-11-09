@@ -138,9 +138,9 @@ export default function Customise() {
                     <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-yellow-400 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
                     <div className={showCheckout ? 'checkout-frame bg-white p-8 sm:p-10 sm:flex-auto my-2 ml-2 rounded-2xl' : 'checkout-frame hidden'}></div>
                     {!showPricing ? <div className="p-8 sm:p-10 lg:flex-auto">
-                        <h3 className="text-2xl font-bold tracking-tight text-white">You&quot;ve chosen {totals != null ? totals.data.details.line_items[0].product.name : '...'}</h3>
+                        <h3 className="text-2xl font-bold tracking-tight text-white">You&apos;ve chosen {totals != null ? totals.data.details.line_items[0].product.name : '...'}</h3>
                         <p className="mt-6 text-base leading-7 text-white">
-                        Now tailor your package to your exact requirements by customising your number of seats & addons below. If you&quot;ve got a discount code, you can enter it here or after you&quot;ve purchased.
+                        Now tailor your package to your exact requirements by customising your number of seats & addons below. If you&apos;ve got a discount code, you can enter it here or after you&apos;ve purchased.
                         </p>
                         {/* <p className="mt-6 text-base leading-7 text-white">
                         Hint: Use code 9DNYSV493B for 15% off your first 3 months!
