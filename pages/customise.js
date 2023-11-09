@@ -138,9 +138,9 @@ export default function Customise() {
                     <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-yellow-400 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
                     <div className={showCheckout ? 'checkout-frame bg-white p-8 sm:p-10 sm:flex-auto my-2 ml-2 rounded-2xl' : 'checkout-frame hidden'}></div>
                     {!showPricing ? <div className="p-8 sm:p-10 lg:flex-auto">
-                        <h3 className="text-2xl font-bold tracking-tight text-white">You've chosen {totals != null ? totals.data.details.line_items[0].product.name : '...'}</h3>
+                        <h3 className="text-2xl font-bold tracking-tight text-white">You&quot;ve chosen {totals != null ? totals.data.details.line_items[0].product.name : '...'}</h3>
                         <p className="mt-6 text-base leading-7 text-white">
-                        Now tailor your package to your exact requirements by customising your number of seats & addons below. If you've got a discount code, you can enter it here or after you've purchased.
+                        Now tailor your package to your exact requirements by customising your number of seats & addons below. If you&quot;ve got a discount code, you can enter it here or after you&quot;ve purchased.
                         </p>
                         {/* <p className="mt-6 text-base leading-7 text-white">
                         Hint: Use code 9DNYSV493B for 15% off your first 3 months!
@@ -179,10 +179,10 @@ export default function Customise() {
                         </h2>
                         <dl className="mt-6 space-y-4">
                         {totals != null ? totals.data.details.line_items.map((totals, index) => (
-                           <div className="flex items-center justify-between">
-                           <dt className="text-base text-white">{totals.product.name} x {totals.quantity}</dt>
-                           <dd className="text-base font-medium text-white">${totals.totals.subtotal/100}</dd>
-                        </div>
+                           <div key={totals.quantity} className="flex items-center justify-between">
+                            <dt className="text-base text-white">{totals.product.name} x {totals.quantity}</dt>
+                            <dd className="text-base font-medium text-white">${totals.totals.subtotal/100}</dd>
+                           </div>
                         )): '...'}
                         <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                             <dt className="flex items-center text-base text-white">
