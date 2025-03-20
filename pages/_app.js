@@ -11,16 +11,12 @@ const paddleFont = localFont({
 })
 
 export default function MyApp({ Component, pageProps }) {
-  const [supabase] = useState(() => createBrowserSupabaseClient())
 
   return (
-    <SessionContextProvider supabaseClient={supabase} initialSession={pageProps.initialSession}>
       <ChakraProvider>
         <main className={`${paddleFont.variable} font-sans`}>
           <Component {...pageProps} />
         </main>
       </ChakraProvider>
-    </SessionContextProvider>
-
   )
 }

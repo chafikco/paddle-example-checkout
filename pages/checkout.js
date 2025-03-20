@@ -1,4 +1,3 @@
-import { PaddleLoader } from "../components/PaddleLoader";
 import { Summary } from "../components/Summary";
 import React, { useEffect, useState } from 'react';
 import {
@@ -11,7 +10,8 @@ import {
 	Text,
 	Stack,
   } from '@chakra-ui/react'
-import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
+import { initializePaddle } from '@paddle/paddle-js';
+
 
 export default function Home(props) {
 	// list of price_id's
@@ -54,6 +54,8 @@ export default function Home(props) {
 		quantity: 1
 	 });
 
+	   const [paddle, setPaddle] = useState();
+
 	async function getPreview(interval, quantity, plan, addons) {
 
 		console.log(interval, quantity, plan, addons)
@@ -82,10 +84,28 @@ export default function Home(props) {
 		})
 		console.log(planTotal)
 	}
+	  // Download and initialize Paddle instance from CDN
+	  useEffect(() => {
+		initializePaddle({ environment: 'sandbox', token: 'test_4cd800f93e1f3c8969c57bea9f2',eventCallback: (event) => {
+			console.log(event)
+		} }).then(
+		  (paddleInstance) => {
+			if (paddleInstance) {
+			  setPaddle(paddleInstance);
+			}
+		  },
+		);
+	  }, []);
+	
+		// Callback to open a checkout
+		const openCheckout = () => {
+			paddle?.Checkout.open({
+				items: [{ priceId: 'pri_01j74en52nfd85zznt3nxf1ny2', quantity: 2 }],
+			});
+			};
 	
 	return (
 		<>
-			<PaddleLoader />
 			<div className="bg-gray-900 py-24 sm:py-32">
 				<div className="mx-auto max-w-7xl px-6 lg:px-8">
 					<div className="mx-auto max-w-4xl text-center">
@@ -175,31 +195,32 @@ export default function Home(props) {
 					type="button"
 					colorScheme={"yellow"}
 					onClick={() => {
-						setShowPricing(true)
-						setShowCheckout(true)
-						Paddle.Checkout.open({
-							settings: {
-								displayMode: "inline",
-								theme: "light",
-								locale: "en",
-								frameTarget: "checkout-frame",
-								frameStyle: "min-width: 400px; width: 100%; min-height: 100% ",
-								frameInitialHeight: "450"
-							},
-							customer: {
-								email: "chafik@paddle.com",
-								address: {
-									countryCode: "GB",
-									postalCode: "E82HL"
-									}
-								},
-								items: [
-									{
-										priceId: planTotal.planId,
-										quantity: planTotal.quantity
-									},
-								],
-						});
+						openCheckout()
+						// setShowPricing(true)
+						// setShowCheckout(true)
+						// Paddle.Checkout.open({
+						// 	settings: {
+						// 		displayMode: "inline",
+						// 		theme: "light",
+						// 		locale: "en",
+						// 		frameTarget: "checkout-frame",
+						// 		frameStyle: "min-width: 400px; width: 100%; min-height: 100% ",
+						// 		frameInitialHeight: "450"
+						// 	},
+						// 	customer: {
+						// 		email: "chafik@paddle.com",
+						// 		address: {
+						// 			countryCode: "GB",
+						// 			postalCode: "E82HL"
+						// 			}
+						// 		},
+						// 		items: [
+						// 			{
+						// 				priceId: planTotal.planId,
+						// 				quantity: planTotal.quantity
+						// 			},
+						// 		],
+						// });
 					}}>
 						Confirm & Checkout
 					</Button>
