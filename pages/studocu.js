@@ -73,14 +73,14 @@ export default function Order() {
               priceId: params.priceId, 
               quantity: params.quantity
             }],
-            // customer: {
-            //     email: "chafik+tax2025@paddle.com",
-            //     name: "Chafik",
-            //     address: {
-            //         countryCode: "GB",
-            //         postalCode: "E8 2HL"
-            //     }
-            // },
+            customer: {
+                email: "chafik+studocu@paddle.com",
+                // name: "Chafik",
+                // address: {
+                //     countryCode: "GB",
+                //     postalCode: "E8 2HL"
+                // }
+            },
           });
         }
       });
