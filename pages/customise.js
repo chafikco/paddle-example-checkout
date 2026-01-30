@@ -66,6 +66,8 @@ export default function Customise() {
   // state for checkout & pricing selection
   const [showCheckout, setShowCheckout] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerSlideIn, setDrawerSlideIn] = useState(false);
 
   // initial array configuration for plan
   const [params, setParams] = useState([
@@ -190,7 +192,17 @@ export default function Customise() {
       console.log(error);
     });
   }, []);
-	
+
+  // Animate mobile drawer slide-up when opening
+  useEffect(() => {
+    if (drawerOpen) {
+      const frame = requestAnimationFrame(() => setDrawerSlideIn(true));
+      return () => cancelAnimationFrame(frame);
+    } else {
+      setDrawerSlideIn(false);
+    }
+  }, [drawerOpen]);
+
 		// Callback to open a checkout (inline for both mobile and desktop)
 		const openCheckout = () => {
 			paddle?.Checkout.open({
@@ -274,7 +286,13 @@ export default function Customise() {
       onClick={() => {
         setShowPricing(true);
         setShowCheckout(true);
-        openCheckout();
+        if (isMobileView) {
+          setDrawerSlideIn(false);
+          setDrawerOpen(true);
+          setTimeout(() => openCheckout(), 50);
+        } else {
+          openCheckout();
+        }
       }}
     >
       Confirm & checkout
@@ -388,13 +406,7 @@ export default function Customise() {
                 <p className="mt-2 text-base text-gray-300">Tailor your plan below, then checkout on your device.</p>
               </div>
 
-              {/* Inline checkout frame with padding to frame the checkout */}
-              {showCheckout && (
-                <div
-                  id="checkout-frame"
-                  className="checkout-frame mb-6 rounded-2xl overflow-hidden bg-[#F3EFEC] min-h-[320px] w-full p-6 sm:p-8"
-                />
-              )}
+              {/* Mobile: checkout lives in bottom drawer, not inline here */}
 
               {!showPricing ? (
                 <div className="space-y-8">
@@ -448,6 +460,42 @@ export default function Customise() {
                   <div className="flex-shrink-0 w-[180px]">{confirmButton}</div>
                 </div>
               </div>
+
+              {/* Bottom drawer: checkout (mobile only) */}
+              {drawerOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-30 bg-black/50 transition-opacity"
+                    aria-hidden
+                    onClick={() => setDrawerOpen(false)}
+                  />
+                  <div
+                    className="fixed left-0 right-0 bottom-0 z-40 max-h-[90vh] rounded-t-2xl bg-[#F3EFEC] shadow-2xl transition-transform duration-300 ease-out flex flex-col"
+                    style={{ transform: drawerSlideIn ? "translateY(0)" : "translateY(100%)" }}
+                  >
+                    <div className="flex-shrink-0 flex items-center justify-between px-4 pt-4 pb-3 border-b border-gray-200/80">
+                      <div className="w-10" aria-hidden />
+                      <div className="w-10 h-1 rounded-full bg-gray-300 flex-shrink-0" aria-hidden />
+                      <button
+                        type="button"
+                        aria-label="Close checkout"
+                        className="p-2 -m-2 rounded-full text-gray-500 hover:text-gray-700 hover:bg-gray-200/80"
+                        onClick={() => setDrawerOpen(false)}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-auto p-4 pb-8 min-h-[320px]">
+                      <div
+                        id="checkout-frame"
+                        className="checkout-frame w-full min-h-[280px] rounded-xl overflow-hidden"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           )}
         </div>
