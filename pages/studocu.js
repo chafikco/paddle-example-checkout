@@ -10,7 +10,7 @@ export default function Order() {
      // initial array configuration for plan
   const [params, setParams] = useState({
 			quantity: 1,
-			priceId: "pri_01jmzdpbsxhtnja9ntsx6q2s55"
+			priceId: "pri_01jqrw2w4pktgwpkcvthpvhppy"
   });
 
   useEffect(() => {
@@ -60,8 +60,11 @@ export default function Order() {
             frameInitialHeight: 450,
             frameStyle: 'width: 100%; background-color: transparent; border: none',
             // successUrl: '/checkout/success',
-            showAddDiscounts: false,
-            showAddTaxId: false
+            // showAddDiscounts: false,
+            showAddTaxId: true,
+            allowLogout: false,
+            allowDiscountRemoval: false,
+            // allowedPaymentMethods: ["google_pay", "paypal"]
           },
         },
       }).then(async (paddle) => {
@@ -73,6 +76,7 @@ export default function Order() {
               priceId: params.priceId, 
               quantity: params.quantity
             }],
+            showAddDiscounts: false,
             customer: {
                 email: "chafik+studocu@paddle.com",
                 // name: "Chafik",
@@ -81,6 +85,7 @@ export default function Order() {
                 //     postalCode: "E8 2HL"
                 // }
             },
+            // transactionId: "txn_01jqb9kztnkq1c4gcjzsn3ggfz"
           });
         }
       });

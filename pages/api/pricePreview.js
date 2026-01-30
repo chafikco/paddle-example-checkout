@@ -4,8 +4,8 @@ export default async function handler(req, res) {
     console.log(params)
 
     let payload = {
-      currency_code: "USD",
-      customer_ip_address: "172.93.232.194",
+      // currency_code: "USD",
+      // customer_ip_address: "172.93.232.194",
       items: params,
       // discount_id: "dsc_01gtwhvc9wfvhfn61arc6r5s8s"
     };
