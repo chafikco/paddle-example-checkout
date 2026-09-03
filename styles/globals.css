@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Self-host the brand font explicitly from /public so it loads identically in
+   dev, production, and any hosting environment (not only via @next/font). */
+@font-face {
+  font-family: 'ABC Favorit';
+  src: url('/ABCFavoritVariable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Webhook history page: Chakra preflight + browser defaults can give inputs a light background
    while text stays light — force dark field colors so typed text is visible. */
 .webhook-history-fields input:not([type='checkbox']):not([type='radio']),

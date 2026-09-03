@@ -9,7 +9,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['var(--font-paddleFont)', ...fontFamily.sans],
+        sans: ['var(--font-paddleFont)', 'ABC Favorit', ...fontFamily.sans],
       },
 	  width: {
         '850px': '850px',
