@@ -7,6 +7,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:https": "local-ssl-proxy --source 3001 --target 3000 --cert certs/localhost.pem --key certs/localhost-key.pem",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -39,6 +40,7 @@
     "autoprefixer": "^10.4.13",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
+    "local-ssl-proxy": "^2.0.5",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.2.6"
   }

@@ -110,6 +110,11 @@ export default function Customise() {
   };
 
   const [paddle, setPaddle] = useState();
+  const paddleRef = useRef();
+
+  useEffect(() => {
+    paddleRef.current = paddle;
+  }, [paddle]);
 
   // confirm button load price
   useEffect(() => {
@@ -149,9 +154,10 @@ export default function Customise() {
       if (event.name === 'checkout.completed') {
         transactionId = event.data.transaction_id;
         console.log(transactionId)
+        console.log(event)
         const openUpsellCheckout = () => {
           console.log('openUpsellCheckout')
-          paddle?.Checkout.open({
+          paddleRef.current?.Checkout.open({
             settings: {
               displayMode: "inline",
               theme: "light",
@@ -161,7 +167,7 @@ export default function Customise() {
               frameStyle: "width: 100%",
               frameInitialHeight: "450",
             },
-            customerAuthToken: "pca_01k9594nwh7d02rs5437bjdq5v_01k5h7ch3k5wjccfat72ywg09z_wo6slcsy32oftsxeiy7psmrtok7qr5zc",
+            customerAuthToken: "pca_01kn78fh4e0msvr3axa9nexcn5_01k5h7ch3k5wjccfat72ywg09z_vm2wbe4bjmt5563ndycv2qsinjpssewc",
             customer: {
               id: 'ctm_01k5h7ch3k5wjccfat72ywg09z'
             },
@@ -173,18 +179,18 @@ export default function Customise() {
             },
             items: [
                 {
-                  priceId: 'pri_01kbzn386pbth1cqr35fz9f70k',
+                  priceId: 'pri_01kbfrawr5k8bna1mjr17jytx4',
                   quantity: 1,
                },
             ],
           });
         };
-
         openUpsellCheckout();
       }
     } }).then(
       (paddleInstance) => {
         if (paddleInstance) {
+          paddleRef.current = paddleInstance;
           setPaddle(paddleInstance);
         }
       },
@@ -212,21 +218,31 @@ export default function Customise() {
           locale: "en",
           variant: "express",
           frameTarget: "checkout-frame",
-          frameStyle: "width: 100%",
+          frameStyle: "width: 100%; text-color: white;",
           frameInitialHeight: "450",
+          showNonExpressPaymentMethods: false
           // allowLogout: false,
           // showAddTaxId: false,
           // showAddDiscounts: false,
           // successUrl: `http://localhost:3000?transaction_id=${transactionId}`,
           // allowedPaymentMethods: ["google_pay", "apple_pay"]
         },
+        // transactionId: `txn_01kxk6199pzs29m41mbnvgzeng`,
         items: [
             {
-              priceId: 'pri_01kbzn386pbth1cqr35fz9f70k',
+              priceId: 'pri_01kxp0mgwznbkcqkc2dbmsr0t9',
               quantity: 1,
            },
         ],
-        discountId: 'dsc_01kbzn5h5b0pjhya23tzmqdjhb'
+        // discountId: 'dsc_01kbzn5h5b0pjhya23tzmqdjhb'
+        // customer: {
+        //   name: "Chafik",
+        //   email: "chafik+china@paddle.com",
+        //   address: {
+        //     countryCode: "CN",
+        //     postalCode: "00000",
+        //   },
+        // },
       });
 		};
 
@@ -347,7 +363,7 @@ export default function Customise() {
                 </p>
               </div>
               <div className="mx-auto mt-16 max-w-2xl rounded-3xl ring-1 ring-yellow-400 sm:mt-20 lg:mx-0 lg:flex lg:max-w-none">
-                <div id="checkout-frame" className={showCheckout ? "checkout-frame bg-[#F3EFEC] p-10 sm:p-12 sm:flex-auto my-2 ml-2 rounded-2xl" : "checkout-frame hidden"}></div>
+                <div id="checkout-frame" className={showCheckout ? "checkout-frame bg-[white] p-10 sm:p-12 sm:flex-auto my-2 ml-2 rounded-2xl" : "checkout-frame hidden"}></div>
                 {!showPricing ? (
                   <div className="p-8 sm:p-10 lg:flex-auto">
                     <h3 className="text-2xl font-bold tracking-tight text-white">

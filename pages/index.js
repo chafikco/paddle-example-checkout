@@ -65,6 +65,29 @@ export default function Example() {
   return (
     <div className="bg-gray-900 py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="mb-8 flex flex-wrap justify-center gap-4 text-sm">
+          <Link href="/bitesize" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Bitesize flow →
+          </Link>
+          <Link href="/taggbox" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Taggbox flow →
+          </Link>
+          <Link href="/praktika" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Praktika flow →
+          </Link>
+          <Link href="/whoisthis" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Whoisthis flow →
+          </Link>
+          <Link href="/2n" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            2N vaulted card →
+          </Link>
+          <Link href="/telegram" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Telegram flow →
+          </Link>
+          <Link href="/webhook-history" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Webhook history →
+          </Link>
+        </div>
         <div className="mx-auto max-w-4xl text-center">
           <h2 className="text-base font-semibold leading-7 text-yellow-400">Pricing</h2>
           <p className="mt-2 text-4xl font-bold tracking-tight text-white sm:text-5xl">
