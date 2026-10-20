@@ -81,6 +81,18 @@ export default function Example() {
           <Link href="/2n" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
             2N vaulted card →
           </Link>
+          <Link href="/bandlab" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            BandLab flow →
+          </Link>
+          <Link href="/cleanmymac" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            CleanMyMac flow →
+          </Link>
+          <Link href="/d5render" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            D5 Render flow →
+          </Link>
+          <Link href="/sandbox-test" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
+            Seller test →
+          </Link>
           <Link href="/telegram" className="rounded-lg bg-white/10 px-4 py-2 text-white hover:bg-white/20">
             Telegram flow →
           </Link>

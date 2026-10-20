@@ -220,7 +220,7 @@ export default function Customise() {
           frameTarget: "checkout-frame",
           frameStyle: "width: 100%; text-color: white;",
           frameInitialHeight: "450",
-          showNonExpressPaymentMethods: false
+          showNonExpressPaymentMethods: true
           // allowLogout: false,
           // showAddTaxId: false,
           // showAddDiscounts: false,
