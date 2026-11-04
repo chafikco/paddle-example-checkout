@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { initializePaddle } from '@paddle/paddle-js'
 
 // $0 subscription price used purely to vault the customer's card.
-const VAULT_PRICE_ID = 'pri_01m1kjr2dvp3b6qz1nearthct6'
+const VAULT_PRICE_ID = 'pri_01m5j93faj04d5dtdpp94vryc1'
 const CHECKOUT_FRAME_ID = 'twon-checkout-frame'
 const DEFAULT_CHECKOUT_FRAME_HEIGHT = 460
 const MIN_CHECKOUT_FRAME_HEIGHT = 300
