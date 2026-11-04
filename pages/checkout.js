@@ -9,9 +9,19 @@ import {
 	CardBody, 
 	Text,
 	Stack,
+	Flex,
+	Switch,
+	Badge,
   } from '@chakra-ui/react'
 import { initializePaddle } from '@paddle/paddle-js';
 
+// Paddle environments. Flip the toggle in the UI to switch between the sandbox
+// test account and the live account (its domain has been approved, so Apple Pay
+// works once the domain is verified in Paddle > My account > Website approval).
+const PADDLE_ENVIRONMENTS = {
+	sandbox: { environment: 'sandbox', token: 'test_4cd800f93e1f3c8969c57bea9f2' },
+	production: { environment: 'production', token: 'live_93ba7f4e29bffc0902806b9bbbf' },
+};
 
 export default function Home(props) {
 	// list of price_id's
@@ -43,6 +53,8 @@ export default function Home(props) {
 
 	const [showCheckout, setShowCheckout] = useState(false);
 	const [showPricing, setShowPricing] = useState(false);
+	const [environment, setEnvironment] = useState('sandbox'); // 'sandbox' | 'production'
+	const isLive = environment === 'production';
 
 	const [planTotal, setPlanTotal] = useState({
 		total: 0,
@@ -84,9 +96,11 @@ export default function Home(props) {
 		})
 		console.log(planTotal)
 	}
-	  // Download and initialize Paddle instance from CDN
+	  // Download and (re)initialize Paddle whenever the environment toggle changes.
 	  useEffect(() => {
-		initializePaddle({ environment: 'sandbox', token: 'test_4cd800f93e1f3c8969c57bea9f2',eventCallback: (event) => {
+		const { environment: env, token } = PADDLE_ENVIRONMENTS[environment];
+		setPaddle(undefined);
+		initializePaddle({ environment: env, token, eventCallback: (event) => {
 			console.log(event)
 		} }).then(
 		  (paddleInstance) => {
@@ -95,9 +109,14 @@ export default function Home(props) {
 			}
 		  },
 		);
-	  }, []);
+	  }, [environment]);
 	
-		// Callback to open a checkout
+		// Callback to open a checkout.
+		// Apple Pay appears automatically (no client flag needed) once it's turned
+		// on in Paddle > Checkout > Checkout configuration and the domain is verified.
+		// Requirements: the page is served over https and the domain-association file
+		// is hosted at /.well-known/apple-developer-merchantid-domain-association
+		// (see public/.well-known). In live mode, use a live price_id below.
 		const openCheckout = () => {
 			paddle?.Checkout.open({
 				items: [{ priceId: 'pri_01j74en52nfd85zznt3nxf1ny2', quantity: 2 }],
@@ -118,6 +137,33 @@ export default function Home(props) {
 					Choose an affordable plan that’s packed with the best features for engaging your audience, creating customer
 					loyalty, and driving sales.
 					</p>
+
+					{/* Environment toggle: sandbox test account vs. live account. */}
+					<Flex mt={8} align="center" justify="center" gap={3}>
+						<Text color={!isLive ? 'white' : 'gray.500'} fontWeight={!isLive ? 'semibold' : 'normal'}>
+							Sandbox
+						</Text>
+						<Switch
+							isChecked={isLive}
+							onChange={(e) => setEnvironment(e.target.checked ? 'production' : 'sandbox')}
+							colorScheme="green"
+							size="lg"
+							aria-label="Toggle live production mode"
+						/>
+						<Text color={isLive ? 'white' : 'gray.500'} fontWeight={isLive ? 'semibold' : 'normal'}>
+							Live
+						</Text>
+						{isLive && (
+							<Badge colorScheme="green" variant="solid" ml={2}>
+								Production
+							</Badge>
+						)}
+					</Flex>
+					<Text mt={2} textAlign="center" fontSize="xs" color="gray.500">
+						{isLive
+							? 'Live mode · Apple Pay enabled (domain verified)'
+							: 'Sandbox mode'}
+					</Text>
 				</div>
 				<div className="my-8 flex justify-center gap-8">
 				<div className="p-8 xl:p-10 bg-white/5 text-white rounded-3xl w-500px ring-yellow-300 ring-2">
