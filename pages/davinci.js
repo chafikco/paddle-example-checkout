@@ -36,6 +36,13 @@ const PLAN_ORDER = ['trial', 'quarterly']
 const EXPRESS_FRAME_ID = 'davinci-express-frame'
 const EXPRESS_INITIAL_FRAME_HEIGHT = 220
 const MIN_CHECKOUT_FRAME_HEIGHT = 80
+const PREFILL_EMAIL = 'chafik+davinci@paddle.com'
+
+function buildCustomer(address) {
+  return address?.countryCode
+    ? { email: PREFILL_EMAIL, address: { countryCode: address.countryCode, postalCode: address.postalCode || undefined } }
+    : { email: PREFILL_EMAIL }
+}
 
 // Format Paddle minor-unit amounts (e.g. "2999") into the localized currency.
 function formatAmount(amount, currencyCode) {
@@ -72,6 +79,9 @@ export default function DavinciFlow() {
   // Guards against opening the checkout twice (incl. React StrictMode's
   // double-invoked mount effect in dev). Only set true when open actually fires.
   const openedRef = useRef(false)
+  const detectedAddressRef = useRef(null)
+  // Customer can't be updated on an open express checkout, so open only after the preview settles.
+  const [previewSettled, setPreviewSettled] = useState(false)
 
   const plan = PLANS[selected]
   const priceId = plan.priceId
@@ -116,12 +126,13 @@ export default function DavinciFlow() {
         frameInitialHeight: String(EXPRESS_INITIAL_FRAME_HEIGHT),
       },
       items: [{ priceId: targetPriceId, quantity: 1 }],
+      customer: buildCustomer(detectedAddressRef.current),
     })
   }
 
-  // Open the embedded express checkout once Paddle is ready.
+  // Open the embedded express checkout once Paddle is ready and the location is known.
   useEffect(() => {
-    if (!paddle?.Initialized || openedRef.current) return
+    if (!paddle?.Initialized || !previewSettled || openedRef.current) return
     // Let the frame mount before Paddle targets it.
     const t = setTimeout(() => {
       if (openedRef.current) return
@@ -130,7 +141,7 @@ export default function DavinciFlow() {
     }, 60)
     return () => clearTimeout(t)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paddle])
+  }, [paddle, previewSettled])
 
   // Keep the open checkout in sync with the selected plan.
   useEffect(() => {
@@ -168,8 +179,14 @@ export default function DavinciFlow() {
           }
         }
         setPreview(map)
+
+        // Prefill the checkout location with the IP-detected address from the preview.
+        detectedAddressRef.current = r?.data?.address || null
       })
       .catch((e) => console.warn('PricePreview failed', e))
+      .finally(() => {
+        if (!cancelled) setPreviewSettled(true)
+      })
     return () => {
       cancelled = true
     }
