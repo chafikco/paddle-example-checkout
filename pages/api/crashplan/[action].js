@@ -70,7 +70,6 @@ function summarize(sub) {
         unitAmount: Number(i.price.unit_price.amount),
       }
     }),
-    managementUrls: sub.management_urls || null,
   }
 }
 

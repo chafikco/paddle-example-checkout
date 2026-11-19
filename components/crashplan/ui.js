@@ -258,18 +258,18 @@ export function FlowMap({ active }) {
               Shows the current plan and offers products they don&apos;t have yet.
             </Step>
             <Arrow />
-            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <Step owner="api" title="Try a product (Option A)" api="cardless trial → cancel + PATCH" active={active === 'optionA'}>
-                Separate 14-day trial; merges into the plan at trial end.
+            <div className="grid grid-cols-1 gap-2">
+              <Step
+                owner="api"
+                title="Try a product: 14-day cardless trial"
+                api={['POST /transactions · cardless', 'trial end: cancel + PATCH prorated']}
+                active={active === 'optionA'}
+              >
+                Separate trial subscription, no card. At trial end it&apos;s cancelled and the product is added to the
+                main subscription.
               </Step>
-              <Step owner="api" title="Free until renewal (Option B)" api="PATCH · do_not_bill">
-                Full price from the next renewal.
-              </Step>
-              <Step owner="api" title="Add storage / products" api="PATCH · prorated_immediately">
-                Prorated, same renewal date.
-              </Step>
-              <Step owner="api" title="Still on trial?" api="PATCH · do_not_bill">
-                Joins the current trial, ends the same day.
+              <Step owner="api" title="Add storage" api="PATCH · prorated_immediately">
+                Prorated so it renews on the same date.
               </Step>
             </div>
             <Arrow />

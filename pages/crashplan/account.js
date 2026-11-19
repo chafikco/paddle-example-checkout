@@ -362,8 +362,9 @@ export default function CrashPlanAccount() {
                       })}
                     </div>
 
+                    {trialing && (
                     <div className="mt-2 flex flex-wrap gap-2 border-t border-slate-100 pt-3">
-                      {trialing && core.variant === 'cardless' && !core.nextBilledAt && (
+                      {core.variant === 'cardless' && !core.nextBilledAt && (
                         <button
                           type="button"
                           disabled={busy}
@@ -373,7 +374,7 @@ export default function CrashPlanAccount() {
                           Add payment method
                         </button>
                       )}
-                      {trialing && (core.variant === 'card' || core.nextBilledAt) && (
+                      {(core.variant === 'card' || core.nextBilledAt) && (
                         <button
                           type="button"
                           disabled={busy}
@@ -384,17 +385,8 @@ export default function CrashPlanAccount() {
                           Demo: end trial now →
                         </button>
                       )}
-                      {core.managementUrls?.view_subscription && (
-                        <a
-                          href={core.managementUrls.view_subscription}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="rounded-md px-3 py-2 text-xs text-slate-500 hover:text-slate-800"
-                        >
-                          Paddle customer portal ↗
-                        </a>
-                      )}
                     </div>
+                    )}
                   </div>
 
                   {/* Option A trials */}
@@ -447,11 +439,10 @@ export default function CrashPlanAccount() {
                 {/* Try / add more products */}
                 <div className="space-y-3">
                   <div className="rounded-xl border border-slate-200 bg-white p-4">
-                    <div className="text-sm font-semibold">{trialing ? 'Add to your trial' : 'Try more products'}</div>
+                    <div className="text-sm font-semibold">Try more products</div>
                     <p className="mt-0.5 text-xs text-slate-500">
-                      {trialing
-                        ? `Added products join your current trial and end on ${formatDate(coreTrialEnds)}.`
-                        : 'Every product joins your existing plan and bill.'}
+                      Every product gets its own 14-day free trial, no card needed. When it ends, it&apos;s added to your
+                      plan so you keep one bill.
                     </p>
 
                     <div className="mt-3 space-y-3">
@@ -479,28 +470,16 @@ export default function CrashPlanAccount() {
                                   <span className="text-xs text-slate-500">{p.unit === 'TB' ? 'TB' : `${p.unit}s`}</span>
                                 </div>
                                 <div className="mt-2 flex flex-col gap-1.5">
-                                  {trialing ? (
-                                    <ActionButton
-                                      primary
-                                      disabled={busy}
-                                      onClick={() =>
-                                        reviewUpdate({
-                                          title: `Add ${p.name} to your trial`,
-                                          body: `Joins the current trial (do_not_bill) and ends with everything else on ${formatDate(coreTrialEnds)}.`,
-                                          changes: [{ key: p.key, quantity: qty }],
-                                        })
-                                      }
-                                    >
-                                      Add to trial
-                                    </ActionButton>
-                                  ) : p.addOn ? (
+                                  {p.addOn ? (
                                     <ActionButton
                                       primary
                                       disabled={busy}
                                       onClick={() =>
                                         reviewUpdate({
                                           title: `Add ${qty} TB of storage`,
-                                          body: 'Prorated now so storage renews on the same date as your plan.',
+                                          body: trialing
+                                            ? `Joins your current trial and bills with your plan on ${formatDate(coreTrialEnds)}.`
+                                            : 'Prorated now so storage renews on the same date as your plan.',
                                           changes: [{ key: p.key, quantity: qty }],
                                         })
                                       }
@@ -508,38 +487,9 @@ export default function CrashPlanAccount() {
                                       Add storage
                                     </ActionButton>
                                   ) : (
-                                    <>
-                                      <ActionButton primary disabled={busy} onClick={() => startOptionATrial(p.key)}>
-                                        Start 14-day free trial
-                                        <Tag>Option A</Tag>
-                                      </ActionButton>
-                                      <ActionButton
-                                        disabled={busy}
-                                        onClick={() =>
-                                          reviewUpdate({
-                                            title: `Add ${p.name}, free until renewal`,
-                                            body: `Added with do_not_bill: no charge until ${formatDate(core.nextBilledAt)}, then full price with the rest of your plan.`,
-                                            changes: [{ key: p.key, quantity: qty }],
-                                            mode: 'do_not_bill',
-                                          })
-                                        }
-                                      >
-                                        Free until renewal
-                                        <Tag>Option B</Tag>
-                                      </ActionButton>
-                                      <ActionButton
-                                        disabled={busy}
-                                        onClick={() =>
-                                          reviewUpdate({
-                                            title: `Add ${p.name} now`,
-                                            body: 'Prorated for the rest of the billing period, then renews with your plan.',
-                                            changes: [{ key: p.key, quantity: qty }],
-                                          })
-                                        }
-                                      >
-                                        Buy now (prorated)
-                                      </ActionButton>
-                                    </>
+                                    <ActionButton primary disabled={busy} onClick={() => startOptionATrial(p.key)}>
+                                      Start 14-day free trial
+                                    </ActionButton>
                                   )}
                                 </div>
                               </>
@@ -636,8 +586,4 @@ function ActionButton({ children, primary, ...props }) {
       {children}
     </button>
   )
-}
-
-function Tag({ children }) {
-  return <span className="rounded bg-white/15 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ring-1 ring-current/20">{children}</span>
 }
